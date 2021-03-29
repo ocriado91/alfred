@@ -1,0 +1,6 @@
+# Alfred Bot Config file
+[API]
+    [API.Google]
+        [API.Google.Tasks]
+            path='config/google'
+            credentials='client_secret.json'
