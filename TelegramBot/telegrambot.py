@@ -4,11 +4,15 @@ import requests
 import sys
 import toml
 
+import logging
+logger = logging.getLogger(__name__)
+
 class TelegramBot():
 
     def __init__(self,
                  config: dict):
         self.config = config
+        logger.info("Init Telegrambot")
 
 
     def extract_message_id(self):
