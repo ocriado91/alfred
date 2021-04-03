@@ -8,6 +8,15 @@ from TelegramBot.telegrambot import TelegramBot
 import toml
 import os
 import argparse
+import logging
+
+# Configure logging
+LOG_FORMATTER = '%(asctime)s - %(levelname)s - %(module)s - %(funcName)s - %(message)s'
+logging.basicConfig(format=LOG_FORMATTER)
+logging.getLogger("urllib3").setLevel(logging.WARNING) # Disable urllib3 debug log messages
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 class alfredBot():
@@ -30,6 +39,7 @@ class alfredBot():
         while True:
             message_id = self.telegrambot.extract_message_id()
             if message_id != last_message_id:
+                logger.info("Received new message")
                 self.telegrambot.read_message()
                 last_message_id = message_id
                 self.telegrambot.write_message("Received message!")

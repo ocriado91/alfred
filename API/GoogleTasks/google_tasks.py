@@ -6,6 +6,9 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+import logging
+logger = logging.getLogger(__name__)
+
 ''' Google Task API to retrieve task list 
     and tasks '''
 
@@ -24,6 +27,8 @@ class GoogleTasks:
 
         # Init credentials
         self.get_credentials(configpath)
+
+        logger.info("Init Google Tasks API")
 
     def get_credentials(self,
                         configpath: str):
