@@ -1,9 +1,8 @@
 # Alfred Bot Config file
 [API]
-    [API.Google]
-        [API.Google.Tasks]
-            path='config/google'
-            credentials='client_secret.json'
+    [API.GoogleTasks]
+        path='config/google'
+        credentials='client_secret.json'
 
-    [API.TelegramBot]
-        API_KEY=<YOUR_TELEGRAMBOT_API_KEY>
+[TelegramBot]
+    API_KEY=<YOUR_TELEGRAMBOT_API_KEY>

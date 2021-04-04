@@ -28,7 +28,8 @@ class GoogleTasks:
         # Init credentials
         self.get_credentials(configpath)
 
-        logger.info("Init Google Tasks API")
+        # Get list of tasks
+        self.get_task_list()
 
     def get_credentials(self,
                         configpath: str):
@@ -63,6 +64,10 @@ class GoogleTasks:
         results = self.service.tasklists().list(maxResults=10).execute()
         items = results.get('items', [])
         self.tasks_list = [x for x in items]
+
+    def get_tasks_title(self):
+        ''' Extract tasks title '''
+        return [x['title'] for x in self.tasks_list]
 
 
     def get_tasks(self,
