@@ -1,6 +1,7 @@
-__pycache__
+# Credentials
+no_delivery/
 client_secret.json
 token.pickle
 
-# Local folder for testing purposes
-no_delivery/
+# Python
+__pycache__
