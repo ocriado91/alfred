@@ -19,8 +19,12 @@ class TelegramBot():
         url = f'''https://api.telegram.org/bot{self.config['API_KEY']}/getUpdates'''
         data = requests.post(url).json()
         # Extract the chat ID field from the newest incoming message
-        self.chat_id = data['result'][-1]['message']['chat']['id']
-        return data['result'][-1]['update_id']
+        if data['result']:
+            self.chat_id = data['result'][-1]['message']['chat']['id']
+            return data['result'][-1]['update_id']
+        else:
+            logger.warning('No detected messages. Plese send a message to Alfred to establish communication')
+            return None
 
     def read_message(self):
 
