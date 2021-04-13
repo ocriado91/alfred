@@ -25,7 +25,6 @@ class Github:
 
         # Extract last commit
         commit_date = commits[-1].commit.author.date
-        print(commit_date)
 
 
 def main():
