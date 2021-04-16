@@ -2,10 +2,10 @@
 
 import requests
 import sys
-import toml
 
 import logging
 logger = logging.getLogger(__name__)
+
 
 class TelegramBot():
 
@@ -13,7 +13,6 @@ class TelegramBot():
                  config: dict):
         self.config = config
         logger.info("Init Telegrambot")
-
 
     def extract_message_id(self):
         url = f'''https://api.telegram.org/bot{self.config['API_KEY']}/getUpdates'''
@@ -40,8 +39,6 @@ class TelegramBot():
         requests.post(url, data).json()
 
 
-
-
 def main():
 
     # Read configfile
@@ -51,6 +48,7 @@ def main():
     telegrambot = TelegramBot(config)
     text = telegrambot.read_message()
     telegrambot.write_message(text)
+
 
 if __name__ == '__main__':
     main()

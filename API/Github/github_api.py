@@ -5,6 +5,7 @@ import github
 import toml
 import sys
 
+
 class Github:
     ''' Wrapper Github class of PyGithub '''
     def __init__(self,
@@ -24,7 +25,7 @@ class Github:
             commits.append(commit)
 
         # Extract last commit
-        commit_date = commits[-1].commit.author.date
+        self.commit_date = commits[-1].commit.author.date
 
 
 def main():
@@ -38,6 +39,7 @@ def main():
 
     # Get last commit
     github.get_last_commit_date()
+
 
 if __name__ == '__main__':
     main()
