@@ -1,10 +1,11 @@
 # Alfred. A Personal Assistant Python Bot
 
-## What is Alfred?
+## Introduction
+### What is Alfred?
 
 Well, I'm a big fan of Batman series, but I don't have the economic resources of Wayne family but I have _Python resources_ :stuck_out_tongue_winking_eye:
 
-## Why Python?
+### Why Python?
 
 A picture is worth a thousand words:
 
