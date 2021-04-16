@@ -9,16 +9,17 @@ from google.auth.transport.requests import Request
 import logging
 logger = logging.getLogger(__name__)
 
-''' Google Task API to retrieve task list 
+''' Google Task API to retrieve task list
     and tasks '''
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/tasks.readonly']
 
+
 class GoogleTasks:
     ''' Google Tasks class '''
 
-    def __init__ (self,
+    def __init__(self,
                  configpath: str):
 
         # Define attributes
@@ -69,9 +70,8 @@ class GoogleTasks:
         ''' Extract tasks title '''
         return [x['title'] for x in self.tasks_list]
 
-
     def get_tasks(self,
-                  task_item = 'My Tasks'):
+                  task_item='My Tasks'):
         ''' This function search all tasks into
             specific task listitem '''
 
@@ -80,7 +80,7 @@ class GoogleTasks:
             if item['title'] == task_item:
                 taskID = item['id']
                 tasks = self.service.tasks().list(tasklist=taskID).execute()
-                for task_item in tasks['items']:    
+                for task_item in tasks['items']:
                     self.tasks.append(task_item['title'])
 
 
@@ -98,9 +98,3 @@ if __name__ == '__main__':
     print('Getting tasks')
     for task_element in tasks.tasks:
         print(task_element)
-
-    
-
-    
-
-    
