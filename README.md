@@ -1,5 +1,7 @@
 # Alfred. A Personal Assistant Python Bot
 
+![github-action-badge](https://github.com/ocriado91/alfred/actions/workflows/python.yaml/badge.svg)
+
 ## Introduction
 ### What is Alfred?
 
@@ -18,3 +20,4 @@ Reference: [https://xkcd.com/353/](https://xkcd.com/353/)
 * Google Tasks API: https://developers.google.com/tasks/quickstart/python
 * Google Calendar API: https://developers.google.com/calendar/quickstart/python
 * PyGithub: https://github.com/PyGithub/PyGithub
+

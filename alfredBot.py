@@ -6,7 +6,6 @@
 from TelegramBot.telegrambot import TelegramBot
 
 import toml
-import os
 import argparse
 import logging
 import sys
@@ -15,7 +14,7 @@ import importlib
 # Configure logging
 LOG_FORMATTER = '%(asctime)s - %(levelname)s - %(module)s - %(funcName)s - %(message)s'
 logging.basicConfig(format=LOG_FORMATTER)
-logging.getLogger("urllib3").setLevel(logging.WARNING) # Disable urllib3 debug log messages
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("PyGithub").setLevel(logging.WARNING)
 
 logger = logging.getLogger()
@@ -35,9 +34,9 @@ class alfredBot():
             # Init Telegram Bot class
             telegram_config = self.config['TelegramBot']
             self.telegrambot = TelegramBot(telegram_config)
-            
+
             # Init Google Task class
-            configpath = self.config['API']['GoogleTasks']['path'] 
+            configpath = self.config['API']['GoogleTasks']['path']
             self.googleTasks = GoogleTasks(configpath)
 
             # Init Github API wrapper class
@@ -54,7 +53,7 @@ class alfredBot():
                     if message_id != last_message_id:
                         message = self.telegrambot.read_message()
                         self.processIncomingMessage(message)
-                        last_message_id = message_id                
+                        last_message_id = message_id
                 else:
                     break
         except KeyboardInterrupt:
@@ -67,7 +66,6 @@ class alfredBot():
 
     def get_API_list(self):
         return self.config['API'].keys()
-
 
     def processIncomingMessage(self,
                                message: str):
@@ -83,14 +81,16 @@ class alfredBot():
             logger.info(f'API list: {api_list_str}')
             self.telegrambot.write_message(f'Please insert a valid option {api_list_str}')
 
+
 def argument_parser():
-    
+
     args = argparse.ArgumentParser()
     args.add_argument('--config',
                       help='''AlfredBot's main configfile''',
                       default='config/alfred.toml')
 
     return args.parse_args()
+
 
 def main():
 
@@ -99,6 +99,7 @@ def main():
 
     # Launch AlfredBot
     alfredBot(args.config)
+
 
 if __name__ == '__main__':
     main()
