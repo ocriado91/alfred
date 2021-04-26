@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+''' Telegram Bot API based on official Telegram Bot API requests
+    Reference: https://core.telegram.org/bots/api s'''
+
 import requests
 import sys
 import toml
@@ -12,12 +15,16 @@ class TelegramBot():
     def __init__(self,
                  config: dict):
         self.config = config
-        logger.info("Init Telegrambot")
+        logger.info("Initialised Telegrambot")
 
 
     def extract_message_id(self):
+        ''' Extract the message ID required to establish
+            channel chat between AlfredBot and Bruce Wayne :) '''
+
         url = f'''https://api.telegram.org/bot{self.config['API_KEY']}/getUpdates'''
         data = requests.post(url).json()
+
         # Extract the chat ID field from the newest incoming message
         if data['result']:
             self.chat_id = data['result'][-1]['message']['chat']['id']
@@ -27,13 +34,18 @@ class TelegramBot():
             return None
 
     def read_message(self):
+        ''' Read message from official TelegramBot API request '''
 
         url = f'''https://api.telegram.org/bot{self.config['API_KEY']}/getUpdates'''
         data = requests.post(url).json()
-        return data['result'][-1]['message']['text']
+
+        # Extract text from last incoming data
+        message = data['result'][-1]['message']['text']
+        return message
 
     def write_message(self,
                       message: str):
+        ''' Sent message from official TelegramBot API request '''
 
         url = f'''https://api.telegram.org/bot{self.config['API_KEY']}/sendMessage'''
         data = {'chat_id': self.chat_id, 'text': message}

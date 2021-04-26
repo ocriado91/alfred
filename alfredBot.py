@@ -4,14 +4,13 @@
 """
 
 from TelegramBot.telegrambot import TelegramBot
-from API.GoogleTasks.google_tasks import GoogleTasks
-from API.Github.github_api import Github
 
 import toml
 import os
 import argparse
 import logging
 import sys
+import importlib
 
 # Configure logging
 LOG_FORMATTER = '%(asctime)s - %(levelname)s - %(module)s - %(funcName)s - %(message)s'
@@ -66,7 +65,7 @@ class alfredBot():
     def read_config(self):
         return toml.load(self.configfile)
 
-    def getAPIList(self):
+    def get_API_list(self):
         return self.config['API'].keys()
 
 
@@ -74,9 +73,10 @@ class alfredBot():
                                message: str):
         logger.info(f'Received message: {message}')
 
-        api_list = self.getAPIList()
+        api_list = self.get_API_list()
         if message in api_list:
             logger.info(f'Detected {message} API')
+            self.set_API(message)
         else:
             logger.warning(f'None API {message} detected')
             api_list_str = ','.join(api_list)
