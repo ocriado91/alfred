@@ -5,6 +5,8 @@ import github
 import toml
 import sys
 
+import logging
+logger = logging.getLogger(__name__)
 
 class Github(API):
     ''' Wrapper Github class of PyGithub '''
