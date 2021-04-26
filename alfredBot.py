@@ -35,14 +35,6 @@ class alfredBot():
             telegram_config = self.config['TelegramBot']
             self.telegrambot = TelegramBot(telegram_config)
 
-            # Init Google Task class
-            configpath = self.config['API']['GoogleTasks']['path']
-            self.googleTasks = GoogleTasks(configpath)
-
-            # Init Github API wrapper class
-            github_config = self.config['API']['Github']
-            self.github = Github(github_config)
-
             last_message_id = -1
             while True:
                 message_id = self.telegrambot.extract_message_id()
