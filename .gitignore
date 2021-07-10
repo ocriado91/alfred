@@ -5,3 +5,6 @@ token.pickle
 
 # Python
 __pycache__
+
+# VSCode
+.vscode/
