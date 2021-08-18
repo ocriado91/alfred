@@ -35,6 +35,7 @@ class GoogleTasks(API):
         self.state = States.INIT
         self.retry = 0
 
+        logger.info('Starting Google Tasks')
         # Define attributes
         self.tasks_list = []
         self.tasks = []

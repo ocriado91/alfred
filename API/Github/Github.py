@@ -13,9 +13,9 @@ class Github(API):
     def __init__(self,
                  config: dict):
 
-        github_api_key = config['API']['Github']['API_KEY']
+        logger.info('Starting Github API')
+        github_api_key = config['Common']['API_KEY']
         self.github = github.Github(github_api_key)
-        self.get_last_commit_date()
 
     def get_last_commit_date(self):
         ''' Extract date of last commit '''
