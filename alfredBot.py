@@ -18,7 +18,7 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("PyGithub").setLevel(logging.WARNING)
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 
 class alfredBot():
@@ -27,6 +27,7 @@ class alfredBot():
                  configfile: str):
 
         try:
+            logger.debug('Starting AlfredBot')
             # Read Alfred Bot configuration
             self.configfile = configfile
             self.config = self.read_config()
@@ -38,7 +39,7 @@ class alfredBot():
             last_message_id = -1
             while True:
                 message_id = self.telegrambot.extract_message_id()
-                # Discard first iteration until now incomingm message
+                # Discard first iteration until now incoming message
                 if last_message_id == -1:
                     last_message_id = message_id
                 if message_id:
@@ -59,19 +60,35 @@ class alfredBot():
     def get_API_list(self):
         return self.config['API'].keys()
 
+    def get_API_keyphrase(self):
+
+        phrases = []
+        # Extract API types defined into configuration file
+        types = self.config['API'].keys()
+        for type in types:
+
+            # Extract API actions from each API type
+            actions = self.config['API'][type].keys()
+            for action in actions:
+                # Try to extract phrase from API action configuration
+                try:
+                    phrases.append(self.config['API'][type][action]['phrase'])
+                except KeyError:
+                    logger.debug(f'No phrase found for action {action}')
+                    continue
+
+        return phrases
+
     def processIncomingMessage(self,
                                message: str):
         logger.info(f'Received message: {message}')
-
-        api_list = self.get_API_list()
-        if message in api_list:
-            logger.info(f'Detected {message} API')
-            self.set_API(message)
+        api_phrases = self.get_API_keyphrase()
+        if message in api_phrases:
+            logger.info(f'Found API phrase {message}')
+            self.telegrambot.write_message(f'Found API phrase {message}')
         else:
-            logger.warning(f'None API {message} detected')
-            api_list_str = ','.join(api_list)
-            logger.info(f'API list: {api_list_str}')
-            self.telegrambot.write_message(f'Please insert a valid option {api_list_str}')
+            logger.info(f'No API phrase found for {message}')
+            self.telegrambot.write_message(f'No API phrase found for {message}')
 
 
 def argument_parser():

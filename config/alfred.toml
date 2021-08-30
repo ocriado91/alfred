@@ -1,8 +1,28 @@
 # Alfred Bot Config file
 [API]
     [API.GoogleTasks]
-        path='config/google'
-        credentials='client_secret.json'
+        [API.GoogleTasks.Common]
+            path='config/google'
+        [API.GoogleTasks.CheckTasks]
+            phrase='Check tasks'
+            function='checkTasks'
+        [API.GoogleTasks.CreateTask]
+            phrase='Create Google Task'
+            function='createGoogleTask'
+    [API.GoogleCalendar]
+        [API.GoogleCalendar.CheckCalendar]
+            phrase='Check my calendar'
+            function='checkCalendar'
+        [API.GoogleCalendar.CreateEvent]
+            phrase='Create event'
+            function='createEvent'
+
+    [API.Github]
+        [API.Github.Common]
+            API_KEY=<YOUR_GITHUB_API_KEY>
+        [API.Github.LastCommit]
+            phrase='Check my last commmit'
+            function='checkLastCommit'
 
 [TelegramBot]
     API_KEY=<YOUR_TELEGRAMBOT_API_KEY>
