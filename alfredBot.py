@@ -94,13 +94,38 @@ class alfredBot():
 
         return phrases
 
+    def getAPIFunction(self, phrase: str):
+        ''' Get API and function through phrase'''
+
+        types = self.config['API'].keys()
+        for type in types:
+            actions = self.config['API'][type].keys()
+            for action in actions:
+                try:
+                    if self.config['API'][type][action]['phrase'] == phrase:
+                        return 'API' + f'.{type}.{type}'
+                except KeyError:
+                    logger.debug(f'No phrase found for action {action}')
+                    continue
+
+        return None
+
     def processIncomingMessage(self,
                                message: str):
         logger.info(f'Received message: {message}')
         api_phrases = self.get_API_keyphrase()
+        # Log list of API keyphrases
+        logger.debug(f'API keyphrases: {api_phrases}')
         if message in api_phrases:
             logger.info(f'Found API phrase {message}')
             self.telegrambot.write_message(f'Found API phrase {message}')
+            module_name = self.getAPIFunction(message)
+            module = importlib.import_module(module_name)
+            dynamic_class = getattr(module, 'GoogleTasks')
+            dynamic_class()
+        
+
+            
         else:
             logger.info(f'No API phrase found for {message}')
             self.telegrambot.write_message(f'No API phrase found for {message}')
