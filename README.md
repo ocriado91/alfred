@@ -1,6 +1,7 @@
 # Alfred. A Personal Assistant Python Bot
 
 ![github-action-badge](https://github.com/ocriado91/alfred/actions/workflows/python.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/ocriado91/alfred/branch/main/graph/badge.svg?token=J75ECUW7FE)](https://codecov.io/gh/ocriado91/alfred)
 
 ## Introduction
 ### What is Alfred?
