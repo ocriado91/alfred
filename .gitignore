@@ -7,3 +7,10 @@ token.pickle
 
 # Python
 __pycache__
+
+# VsCode
+.vscode
+
+# Coverage
+htmlcov
+.coverage
