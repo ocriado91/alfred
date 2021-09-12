@@ -1,7 +1,5 @@
 # Google API
-google-api-python-client==2.0.2
-google-api-python-client==2.0.2
-google-api-python-client==2.0.2
+google-api-python-client>=2.0.2
 
 # PyGithub (https://github.com/PyGithub/PyGithub)
 PyGithub
