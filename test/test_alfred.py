@@ -5,7 +5,7 @@ import alfredBot
 from TelegramBot.telegrambot import TelegramBot
 import sys
 
-alfred = alfredBot.alfredBot('no_delivery/alfred.toml')
+alfred = alfredBot.alfredBot('test/config/alfred.toml')
 
 def test_alfred_get_api_list():
     assert list(alfred.get_API_list()) == ['GoogleTasks', 
