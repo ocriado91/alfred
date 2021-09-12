@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 
+from API.API_abstract import API
 import github
-
 import toml
 import sys
 
+import logging
+logger = logging.getLogger(__name__)
 
-class Github:
+class Github(API):
     ''' Wrapper Github class of PyGithub '''
     def __init__(self,
                  config: dict):
 
-        github_api_key = config['API_KEY']
+        logger.info('Starting Github API')
+        github_api_key = config['Common']['API_KEY']
         self.github = github.Github(github_api_key)
-        self.get_last_commit_date()
 
     def get_last_commit_date(self):
         ''' Extract date of last commit '''
@@ -26,6 +28,17 @@ class Github:
 
         # Extract last commit
         self.commit_date = commits[-1].commit.author.date
+
+    def show_options(self):
+        message = 'Please select and option:\n'
+        message += ' 1) Show last commit\n'
+        return message
+
+    def process_action(self,
+                       message: str,
+                       retry: int):
+        logger.info(f'Trying to process {message} at try = {self.entry}')
+        
 
 
 def main():
