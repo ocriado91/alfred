@@ -28,9 +28,8 @@ class alfredBot():
 
         try:
             logger.debug('Starting AlfredBot')
-            # Read Alfred Bot configuration
-            self.configfile = configfile
-            self.config = self.read_config()
+            # Read Alfred Bot configuration file
+            self.config = self.read_config(configfile)
 
             # Init Telegram Bot class
             telegram_config = self.config['TelegramBot']
@@ -64,71 +63,80 @@ class alfredBot():
                 break
 
 
-    def read_config(self):
-        config = toml.load(self.configfile)
-        # Disable testing if not enabled in configuration file
-        if not config['Miscellaneous']['TESTING']:
-            logger.info('Testing is disabled')
-            config['Miscellaneous']['TESTING'] = False
+    def read_config(self,
+                    configfile: str = None):
+        config = toml.load(configfile)
+        # Disable testing if Miscellaneus section 
+        # is not defined as key into configuration dictionary
+        if 'Miscellaneous' not in config.keys():
+            config['Miscellaneous'] = {'TESTING': False}
         return config
-
-    def get_API_list(self):
-        return self.config['API'].keys()
 
     def get_API_keyphrase(self):
 
         phrases = []
-        # Extract API types defined into configuration file
-        types = self.config['API'].keys()
-        for type in types:
+        # Extract API packages defined into configuration file
+        packages = self.config['API'].keys()
+        logger.debug(f'API packages: {packages}')
+        for package in packages:
 
-            # Extract API actions from each API type
-            actions = self.config['API'][type].keys()
-            for action in actions:
-                # Try to extract phrase from API action configuration
-                try:
-                    phrases.append(self.config['API'][type][action]['phrase'])
-                except KeyError:
-                    logger.debug(f'No phrase found for action {action}')
-                    continue
+            # Extract API modules from each API package
+            modules = self.config['API'][package].keys()
+            logger.debug(f'API modules: {modules}')
+            for module in modules:
 
+                # Extract API actions from each API modules
+                actions = self.config['API'][package][module].keys()
+                logger.debug(f'Actions: {actions}')
+                for action in actions:
+                    # Try to extract phrase from API action configuration
+                    try:
+                        phrases.append(self.config['API'][package][module][action]['phrase'])
+                    # Except KeyError if no phrase is defined and TypeError if no action is defined
+                    except (KeyError, TypeError):
+                        continue
         return phrases
 
     def getAPIFunction(self, phrase: str):
         ''' Get API and function through phrase'''
 
-        types = self.config['API'].keys()
-        for type in types:
-            actions = self.config['API'][type].keys()
-            for action in actions:
-                try:
-                    if self.config['API'][type][action]['phrase'] == phrase:
-                        return 'API' + f'.{type}.{type}'
-                except KeyError:
-                    logger.debug(f'No phrase found for action {action}')
-                    continue
-
-        return None
+        packages = self.config['API'].keys()
+        logger.debug(f'API packages: {packages}')
+        for package in packages:
+            modules = self.config['API'][package].keys()
+            for module in modules:
+                actions = self.config['API'][package][module].keys()
+                for action in actions:
+                    try:
+                        if phrase == self.config['API'][package][module][action]['phrase']:
+                            return f'API.{package}.{module}'
+                    except (KeyError, TypeError):
+                        continue
 
     def processIncomingMessage(self,
                                message: str):
+
+        ''' Check incoming message and compare against
+            phrases defined by configuration'''
+
         logger.info(f'Received message: {message}')
         api_phrases = self.get_API_keyphrase()
         # Log list of API keyphrases
         logger.debug(f'API keyphrases: {api_phrases}')
         if message in api_phrases:
-            logger.info(f'Found API phrase {message}')
-            self.telegrambot.write_message(f'Found API phrase {message}')
-            module_name = self.getAPIFunction(message)
-            module = importlib.import_module(module_name)
-            dynamic_class = getattr(module, 'GoogleTasks')
-            dynamic_class()
-        
 
-            
+            # Get API and function through message
+            module_name = self.getAPIFunction(message)
+            logger.debug(f'Module name: {module_name}')
+            module = importlib.import_module(module_name)
+            class_name = module_name.split('.')[-1]
+            dynamic_class = getattr(module, class_name)
+            result = dynamic_class(self.config).process_action(message)
+            logger.debug(f'Result: {result}')
+            self.telegrambot.write_message(result)
         else:
             logger.info(f'No API phrase found for {message}')
-            self.telegrambot.write_message(f'No API phrase found for {message}')
+            self.telegrambot.write_message(f"I don't have any action for {message}. Please, try again")
 
 
 def argument_parser():

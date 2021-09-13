@@ -33,25 +33,15 @@ class GoogleTasks(API):
 
         logger.info(f'Init Google Tasks!!!')
 
-        self.state = States.INIT
-        self.retry = 0
-
         logger.info('Starting Google Tasks')
         # Define attributes
         self.tasks_list = []
         self.tasks = []
 
         # Init credentials
-        configpath = config['API']['GoogleTasks']['path']
-        credentials_file = config['API']['GoogleTasks']['credentials']
+        configpath = config['API']['Google']['Common']['path']
         self.get_credentials(configpath)
         self.show_options()
-
-    def show_options(self):
-        message = 'Please select an option:\n'
-        message += '1) Get task list\n'
-        message += '2) Get tasks'
-        return message
 
     def get_credentials(self,
                         configpath: str):
@@ -88,9 +78,11 @@ class GoogleTasks(API):
         self.tasks_list = [x for x in items]
 
     def CheckTasks(self):
-        ''' Extract tasks title '''
+        ''' Extract tasks title as string'''
         self.get_task_list()
         self.tasks_list_title = [x['title'] for x in self.tasks_list]
+        self.tasks_list = ','.join(self.tasks_list_title)
+        
 
     def get_tasks(self,
                   task_item='My Tasks'):
@@ -104,6 +96,12 @@ class GoogleTasks(API):
                 tasks = self.service.tasks().list(tasklist=taskID).execute()
                 for task_item in tasks['items']:
                     self.tasks.append(task_item['title'])
+
+    def process_action(self, message: str):
+        if message == 'Check tasks':
+            logger.debug(f'Detected API message {message}')
+            self.CheckTasks()
+            return self.tasks_list
 
 
 if __name__ == '__main__':

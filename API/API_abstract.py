@@ -5,9 +5,5 @@ class API(ABC):
 
     @abstractmethod
     def process_action(self,
-                      message: str):
-        None
-
-    @abstractmethod
-    def show_options(self):
+                       message: str):
         None

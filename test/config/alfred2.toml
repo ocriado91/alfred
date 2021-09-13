@@ -27,6 +27,3 @@
 
 [TelegramBot]
     API_KEY='<YOUR_TELEGRAM_API_KEY>'
-
-[Miscellaneous]
-    TESTING=true
