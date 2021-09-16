@@ -7,21 +7,20 @@ import sys
 
 alfred = alfredBot.alfredBot('test/config/alfred.toml')
 
-def test_alfred_get_api_list():
-    assert list(alfred.get_API_list()) == ['GoogleTasks', 
-                                           'GoogleCalendar', 
-                                           'Github']
-
 def test_processingMessage():
     message = 'Check tasks'
-    aphi_phrases = alfred.get_API_keyphrase()
-
+    api_phrases = alfred.get_API_keyphrase()
+    print(api_phrases)
     # Check if the message is in the list of API keyphrases
-    assert message in aphi_phrases
+    assert message in api_phrases
 
 def test_read_config():
-    config = alfred.read_config()
+    config = alfred.read_config('test/config/alfred.toml')
     assert config['Miscellaneous']['TESTING']
+
+def test_read_empty_config():
+    config = alfred.read_config('test/config/alfred2.toml')
+    assert config['Miscellaneous']['TESTING'] == False
 
 
 
