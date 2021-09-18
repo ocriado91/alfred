@@ -31,7 +31,8 @@ class AlfredBot():
         try:
             logger.debug('Starting AlfredBot')
             # Read Alfred Bot configuration file
-            self.config = read_config(configfile)
+            self.configfile = configfile
+            self.config = self.read_config()
 
             # Init Telegram Bot class
             telegram_config = self.config['TelegramBot']
@@ -46,6 +47,16 @@ class AlfredBot():
             self.telegrambot.write_message('See you soon! :)')
             logger.info('Catched KeyboardInterrupt. Bye :)')
             sys.exit()
+
+    def read_config(self):
+        ''' Read Alfred TOML configuration file '''
+
+        config = toml.load(self.configfile)
+        # Disable testing if Miscellaneus section
+        # is not defined as key into configuration dictionary
+        if 'Miscellaneous' not in config.keys():
+            config['Miscellaneous'] = {'TESTING': True}
+        return config
 
     def telegram_polling(self):
         ''' Read new Telegram messages through
@@ -132,17 +143,6 @@ class AlfredBot():
             logger.info('No API phrase found for %s', message)
             self.telegrambot.write_message(f"I don't have any action for {message}.\
                                              Please, try again")
-
-
-def read_config(configfile: str = None):
-    ''' Read Alfred TOML configuration file '''
-
-    config = toml.load(configfile)
-    # Disable testing if Miscellaneus section
-    # is not defined as key into configuration dictionary
-    if 'Miscellaneous' not in config.keys():
-        config['Miscellaneous'] = {'TESTING': False}
-    return config
 
 
 def argument_parser():
