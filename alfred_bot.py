@@ -132,7 +132,7 @@ class AlfredBot():
 
             # Get API and function through message
             module_name = self.get_api_function(message)
-            logger.debu('Module name %s', module_name)
+            logger.debug('Module name %s', module_name)
             module = importlib.import_module(module_name)
             class_name = module_name.split('.')[-1]
             dynamic_class = getattr(module, class_name)
