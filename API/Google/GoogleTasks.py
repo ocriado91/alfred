@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
+''' Google Tasks Python API '''
 
-from API.API_abstract import API
-from enum import Enum
+import logging
+import os.path
+import pickle
+import sys
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
-import os.path
-import pickle
-
-# Define states
-class States(Enum):
-    INIT = 1
-    TASK_LIST = 2
-
-import logging
+from API.api_abstract import API
 logger = logging.getLogger(__name__)
 
-import sys
 
 ''' Google Task API to retrieve task list
     and tasks '''
@@ -31,27 +25,25 @@ class GoogleTasks(API):
     def __init__(self,
                  config: dict):
 
-        logger.info(f'Init Google Tasks!!!')
-
         logger.info('Starting Google Tasks')
         # Define attributes
+        self.tasks_list_title = []
         self.tasks_list = []
         self.tasks = []
 
         # Init credentials
-        configpath = config['API']['Google']['Common']['path']
-        self.get_credentials(configpath)
-        self.show_options()
+        configfile = config['API']['Google']['Common']['path']
+        self.get_credentials(configfile)
 
     def get_credentials(self,
-                        configpath: str):
+                        configfile: str):
         '''Get Google Calendar credentials. The file token.pickle stores
          the user's access and refresh tokens, and is
          created automatically when the authorization flow completes for the first
          time. '''
-        logger.info(f'Reading configuration file from {configpath}')
+        logger.info('Reading configuration file from %s', configfile)
         creds = None
-        token_path = os.path.join(configpath, 'token.pickle')
+        token_path = os.path.join(configfile, 'token.pickle')
         if os.path.exists(token_path):
             with open(token_path, 'rb') as token:
                 creds = pickle.load(token)
@@ -61,7 +53,7 @@ class GoogleTasks(API):
                 creds.refresh(Request())
             else:
                 print("Trying to open credentials.json file")
-                credentials = os.path.join(configpath, 'client_secret.json')
+                credentials = os.path.join(configfile, 'client_secret.json')
                 flow = InstalledAppFlow.from_client_secrets_file(
                     credentials, SCOPES)
                 creds = flow.run_local_server(port=0)
@@ -75,39 +67,40 @@ class GoogleTasks(API):
         ''' Retrieve task list '''
         results = self.service.tasklists().list(maxResults=10).execute()
         items = results.get('items', [])
-        self.tasks_list = [x for x in items]
+        self.tasks_list = list(items)
 
-    def CheckTasks(self):
+    def check_tasks(self):
         ''' Extract tasks title as string'''
         self.get_task_list()
         self.tasks_list_title = [x['title'] for x in self.tasks_list]
         self.tasks_list = ','.join(self.tasks_list_title)
-        
 
     def get_tasks(self,
-                  task_item='My Tasks'):
+                  check_item='My Tasks'):
         ''' This function search all tasks into
             specific task listitem '''
 
         self.get_task_list()
         for item in self.tasks_list:
-            if item['title'] == task_item:
-                taskID = item['id']
-                tasks = self.service.tasks().list(tasklist=taskID).execute()
-                for task_item in tasks['items']:
-                    self.tasks.append(task_item['title'])
+            if item['title'] == check_item:
+                task_id = item['id']
+                tasks_ = self.service.tasks().list(tasklist=task_id).execute()
+                for element in tasks_['items']:
+                    self.tasks.append(element['title'])
 
     def process_action(self, message: str):
+        ''' Process Google Tasks action'''
         if message == 'Check tasks':
-            logger.debug(f'Detected API message {message}')
-            self.CheckTasks()
+            logger.debug('Detected API message %s', message)
+            self.check_tasks()
             return self.tasks_list
+        return None
 
 
 if __name__ == '__main__':
 
     configpath = sys.argv[1]
-    tasks = GoogleTasks(configpath=configpath)
+    tasks = GoogleTasks(configpath)
 
     # Show tasks list
     tasks.get_task_list()
@@ -116,7 +109,7 @@ if __name__ == '__main__':
         print(task_item['title'])
 
     # Show tasks into Task Testing task list
-    tasks.get_tasks(task_item='Task Testing')
+    tasks.get_tasks(check_item='Task Testing')
     print('Getting tasks')
     for task_element in tasks.tasks:
         print(task_element)

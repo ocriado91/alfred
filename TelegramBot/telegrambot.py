@@ -3,18 +3,21 @@
 ''' Telegram Bot API based on official Telegram Bot API requests
     Reference: https://core.telegram.org/bots/api s'''
 
-import requests
-import sys
 
 import logging
+import sys
+import requests
+
 logger = logging.getLogger(__name__)
 
 
 class TelegramBot():
+    ''' Telegram Bot Class '''
 
     def __init__(self,
                  config: dict):
         self.config = config
+        self.chat_id = None
         logger.info("Initialised Telegrambot")
 
     def extract_message_id(self):
@@ -28,9 +31,9 @@ class TelegramBot():
         if data['result']:
             self.chat_id = data['result'][-1]['message']['chat']['id']
             return data['result'][-1]['update_id']
-        else:
-            logger.warning('No detected messages. Plese send a message to Alfred to establish communication')
-            return None
+        logger.warning('No detected messages.\
+            Plese send a message to Alfred to establish communication')
+        return None
 
     def read_message(self):
         ''' Read message from official TelegramBot API request '''
@@ -52,6 +55,7 @@ class TelegramBot():
 
 
 def main():
+    ''' Main function '''
 
     # Read configfile
     config = sys.argv[1]
