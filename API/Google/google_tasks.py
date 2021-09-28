@@ -94,6 +94,9 @@ class GoogleTasks(API):
             logger.debug('Detected API message %s', message)
             self.check_tasks()
             return self.tasks_list
+        elif message == 'Check task list':
+            logger.debug('Detected API message %s', message)
+            self.check
         return None
 
 
