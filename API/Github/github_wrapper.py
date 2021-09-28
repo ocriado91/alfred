@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
-from API.API_abstract import API
-import github
-import toml
-import sys
+''' Github Class wrapper through PyGithub'''
 
 import logging
+import sys
+import github
+import toml
+from API.api_abstract import API
+
 logger = logging.getLogger(__name__)
+
 
 class Github(API):
     ''' Wrapper Github class of PyGithub '''
@@ -16,6 +19,7 @@ class Github(API):
         logger.info('Starting Github API')
         github_api_key = config['Common']['API_KEY']
         self.github = github.Github(github_api_key)
+        self.commit_date = None
 
     def get_last_commit_date(self):
         ''' Extract date of last commit '''
@@ -29,29 +33,24 @@ class Github(API):
         # Extract last commit
         self.commit_date = commits[-1].commit.author.date
 
-    def show_options(self):
-        message = 'Please select and option:\n'
-        message += ' 1) Show last commit\n'
-        return message
-
     def process_action(self,
-                       message: str,
-                       retry: int):
-        logger.info(f'Trying to process {message} at try = {self.entry}')
-        
+                       message: str):
+        ''' Process action '''
+        pass
 
 
 def main():
+    ''' Main function '''
 
     configpath = sys.argv[1]
     config = toml.load(configpath)
     config_github = config['API']['Github']
 
     # Init Github API
-    github = Github(config_github)
+    github_ = Github(config_github)
 
     # Get last commit
-    github.get_last_commit_date()
+    github_.get_last_commit_date()
 
 
 if __name__ == '__main__':
