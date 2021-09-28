@@ -146,7 +146,7 @@ class AlfredBot():
             module = importlib.import_module(module_name)
             dynamic_class = getattr(module, class_name)
             logger.debug('Running action %s from module %s',
-                          message, module_name)
+                         message, module_name)
             # Run API process action function and retrieve result
             result = dynamic_class(self.config).process_action(message)
             logger.debug('Result: %s', result)
