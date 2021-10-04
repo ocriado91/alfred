@@ -1,28 +1,39 @@
 # Alfred Bot Config file
 [API]
-    [API.GoogleTasks]
-        [API.GoogleTasks.Common]
+    [API.Google]
+        [API.Google.Common]
             path='config/google'
-        [API.GoogleTasks.CheckTasks]
-            phrase='Check tasks'
-            function='checkTasks'
-        [API.GoogleTasks.CreateTask]
-            phrase='Create Google Task'
-            function='createGoogleTask'
-    [API.GoogleCalendar]
-        [API.GoogleCalendar.CheckCalendar]
-            phrase='Check my calendar'
-            function='checkCalendar'
-        [API.GoogleCalendar.CreateEvent]
-            phrase='Create event'
-            function='createEvent'
+        [API.Google.GoogleTasks]
+            [API.Google.GoogleTasks.CheckTasks]
+                module='google_tasks'
+                phrase='Check tasks'
+                function='checkTasks'
+            [API.Google.GoogleTasks.CheckTasksList]
+                module='google_tasks'
+                phrase='Check task list'
+                function='checkTasks'
+            [API.Google.GoogleTasks.CreateTask]
+                module='google_tasks'
+                phrase='Create Google Task'
+                function='createGoogleTask'
+        [API.Google.GoogleCalendar]
+            [API.Google.GoogleCalendar.CheckCalendar]
+                module='google_calendar'
+                phrase='Check my calendar'
+                function='checkCalendar'
+            [API.Google.GoogleCalendar.CreateEvent]
+                module='google_calendar'
+                phrase='Create event'
+                function='createEvent'
 
-    [API.Github]
-        [API.Github.Common]
+    [API.github_wrapper]
+        [API.github_wrapper.Common]
             API_KEY=<YOUR_GITHUB_API_KEY>
-        [API.Github.LastCommit]
+        [API.github_wrapper.LastCommit]
             phrase='Check my last commmit'
             function='checkLastCommit'
 
 [TelegramBot]
     API_KEY=<YOUR_TELEGRAMBOT_API_KEY>
+[Miscellaneous]
+    TESTING=false
