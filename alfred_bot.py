@@ -40,7 +40,7 @@ class AlfredBot():
 
             # Only execute Telegram Bot polling if testing
             # is not enabled into configile
-            if not self.config['Miscellaneous']['TESTING']:
+            if not self.config['Miscellaneous']['TESTING']: # pragma: no cover
                 self.telegram_polling()
 
         except KeyboardInterrupt:
@@ -105,7 +105,6 @@ class AlfredBot():
         ''' Get API and function through phrase'''
 
         packages = self.config['API'].keys()
-        logger.debug('API packages %s', packages)
         for package in packages:
             class_actions = self.config['API'][package].keys()
             for class_action in class_actions:
