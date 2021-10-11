@@ -8,7 +8,9 @@ token.pickle
 
 # Python
 __pycache__
+_pytest_cache/
 
 # Coverage
 .coverage
 htmlcov
+coverage_html_report/
