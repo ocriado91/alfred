@@ -5,6 +5,8 @@ import logging
 import os.path
 import pickle
 import sys
+
+import toml
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
@@ -23,7 +25,7 @@ class GoogleTasks(API):
     ''' Google Tasks class '''
 
     def __init__(self,
-                 config: dict):
+                 configpath: dict):
 
         logger.info('Starting Google Tasks')
         # Define attributes
@@ -32,6 +34,7 @@ class GoogleTasks(API):
         self.tasks = []
 
         # Init credentials
+        config = toml.load(configpath)
         configfile = config['API']['Google']['Common']['path']
         self.get_credentials(configfile)
 
@@ -63,28 +66,22 @@ class GoogleTasks(API):
 
         self.service = build('tasks', 'v1', credentials=creds)
 
-    def get_task_list(self):
-        ''' Retrieve task list '''
+    def get_tasklist(self) -> str:
+        ''' Read tasklist and save it into attribute '''
         results = self.service.tasklists().list(maxResults=10).execute()
         items = results.get('items', [])
         self.tasks_list = list(items)
 
-    def check_tasks(self):
-        ''' Extract tasks title as string'''
-        self.get_task_list()
-        self.tasks_list_title = [x['title'] for x in self.tasks_list]
-        self.tasks_list = ','.join(self.tasks_list_title)
-
     def get_tasks(self,
-                  check_item='My Tasks'):
-        ''' This function search all tasks into
-            specific task listitem '''
+                  target_tasklist='My Tasks'):
+        '''  Read all tasks specific task list '''
 
-        self.get_task_list()
+        self.get_tasklist()
         for item in self.tasks_list:
-            if item['title'] == check_item:
+            if item['title'] == target_tasklist:
                 task_id = item['id']
                 tasks_ = self.service.tasks().list(tasklist=task_id).execute()
+                print(tasks_)
                 for element in tasks_['items']:
                     self.tasks.append(element['title'])
 
@@ -96,23 +93,24 @@ class GoogleTasks(API):
             return self.tasks_list
         elif message == 'Check task list':
             logger.debug('Detected API message %s', message)
-            self.check
+            self.get_tasks()
         return None
 
 
 if __name__ == '__main__':
 
     configpath = sys.argv[1]
+    logger.debug(f'Reading {configpath}')
     tasks = GoogleTasks(configpath)
 
     # Show tasks list
-    tasks.get_task_list()
+    tasks.get_tasklist()
     print('Getting tasklist')
     for task_item in tasks.tasks_list:
         print(task_item['title'])
 
     # Show tasks into Task Testing task list
-    tasks.get_tasks(check_item='Task Testing')
+    tasks.get_tasks(target_tasklist='Task Testing')
     print('Getting tasks')
     for task_element in tasks.tasks:
         print(task_element)

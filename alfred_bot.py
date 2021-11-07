@@ -129,26 +129,26 @@ class AlfredBot():
         # Log list of API keyphrases
         logger.debug('API keyphrase %s', api_phrases)
         if message in api_phrases:
+
             # Get API and function through message
             # with format API.package.module.class_action
             module_aux = self.get_api_function(message)
-            logger.debug('API module %s', module_aux)
+
             # Extract all but last element of module_aux
             # spliited by dot character
             module_name = '.'.join(module_aux.split('.')[:-1])
-            logger.debug('Module name %s', module_name)
+
             # Extract class by last element of module_aux
             # splitted by dot character
             class_name = module_aux.split('.')[-1]
-            logger.debug('Class name %s', class_name)
+
             # Load module dynamically and class
             module = importlib.import_module(module_name)
             dynamic_class = getattr(module, class_name)
-            logger.debug('Running action %s from module %s',
-                         message, module_name)
+
             # Run API process action function and retrieve result
             result = dynamic_class(self.config).process_action(message)
-            logger.debug('Result: %s', result)
+
             # Send result to Telegram Bot
             self.telegrambot.write_message(result)
         else:
