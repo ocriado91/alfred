@@ -25,7 +25,7 @@ class GoogleTasks(API):
     ''' Google Tasks class '''
 
     def __init__(self,
-                 configpath: dict):
+                 configpath: str):
 
         logger.info('Starting Google Tasks')
         # Define attributes
@@ -52,14 +52,10 @@ class GoogleTasks(API):
                 creds = pickle.load(token)
         # If there are no (valid) credentials available, let the user log in.
         if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                print("Trying to open credentials.json file")
-                credentials = os.path.join(configfile, 'client_secret.json')
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    credentials, SCOPES)
-                creds = flow.run_local_server(port=0)
+            credentials = os.path.join(configfile, 'client_secret.json')
+            flow = InstalledAppFlow.from_client_secrets_file(
+                credentials, SCOPES)
+            creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
             with open(token_path, 'wb') as token:
                 pickle.dump(creds, token)
@@ -81,9 +77,13 @@ class GoogleTasks(API):
             if item['title'] == target_tasklist:
                 task_id = item['id']
                 tasks_ = self.service.tasks().list(tasklist=task_id).execute()
-                print(tasks_)
-                for element in tasks_['items']:
-                    self.tasks.append(element['title'])
+                # Try to extract all tasks from list or set to empty list
+                # if no tasks are found
+                try:
+                    for element in tasks_['items']:
+                        self.tasks.append(element['title'])
+                except KeyError:
+                    self.tasks = None
 
     def process_action(self, message: str):
         ''' Process Google Tasks action'''
@@ -94,6 +94,11 @@ class GoogleTasks(API):
         elif message == 'Check task list':
             logger.debug('Detected API message %s', message)
             self.get_tasks()
+            if  self.tasks:
+                # Convert list to string
+                return '\n'.join(self.tasks)
+            else:
+                return 'No tasks'
         return None
 
 
