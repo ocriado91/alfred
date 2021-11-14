@@ -39,8 +39,8 @@ class AlfredBot():
             self.telegrambot = TelegramBot(telegram_config)
 
             # Only execute Telegram Bot polling if testing
-            # is not enabled into configile
-            if not self.config['Miscellaneous']['TESTING']: # pragma: no cover
+            # is not enabled into configfile
+            if not self.config['Miscellaneous']['TESTING']:  # pragma: no cover
                 self.telegram_polling()
 
         except KeyboardInterrupt:
@@ -61,13 +61,17 @@ class AlfredBot():
     def telegram_polling(self):
         ''' Read new Telegram messages through
             pollin mechanism'''
+
         last_message_id = -1
         while True:
             message_id = self.telegrambot.extract_message_id()
             # Discard first iteration until now incoming message
             if last_message_id == -1:
                 last_message_id = message_id
+
+            # Check if new message is available
             if message_id:
+                # Check if new message is different from last one
                 if message_id != last_message_id:
                     message = self.telegrambot.read_message()
                     self.processing_incoming_message(message)
@@ -105,6 +109,8 @@ class AlfredBot():
         ''' Get API and function through phrase'''
 
         packages = self.config['API'].keys()
+        # For each package, search incoming message into `phrase`
+        # subsection of API configuration defined into configfile
         for package in packages:
             class_actions = self.config['API'][package].keys()
             for class_action in class_actions:
@@ -114,6 +120,7 @@ class AlfredBot():
                         if phrase == self.config['API'][package][class_action][action]['phrase']:
                             module = self.config['API'][package][class_action][action]['module']
                             return f'API.{package}.{module}.{class_action}'
+                    # Avoid KeyError and TypeError errors in case of non-API configuration section
                     except (KeyError, TypeError):
                         continue
         return None
@@ -126,8 +133,6 @@ class AlfredBot():
 
         logger.info('Received message: %s', message)
         api_phrases = self.get_api_keyphrase()
-        # Log list of API keyphrases
-        logger.debug('API keyphrase %s', api_phrases)
         if message in api_phrases:
 
             # Get API and function through message
@@ -135,19 +140,21 @@ class AlfredBot():
             module_aux = self.get_api_function(message)
 
             # Extract all but last element of module_aux
-            # spliited by dot character
+            # spliited by dot character to extract the
+            # module name
             module_name = '.'.join(module_aux.split('.')[:-1])
 
             # Extract class by last element of module_aux
-            # splitted by dot character
+            # splitted by dot character to etract the
+            # class name
             class_name = module_aux.split('.')[-1]
 
             # Load module dynamically and class
             module = importlib.import_module(module_name)
             dynamic_class = getattr(module, class_name)
 
-            # Run API process action function and retrieve result
-            result = dynamic_class(self.config).process_action(message)
+            # Run API process action function and retrieve string result
+            result = dynamic_class(self.configfile).process_action(message)
 
             # Send result to Telegram Bot
             self.telegrambot.write_message(result)
