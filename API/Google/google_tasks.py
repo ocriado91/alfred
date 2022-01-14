@@ -2,15 +2,12 @@
 ''' Google Tasks Python API '''
 
 import logging
-import os.path
-import pickle
 import sys
 
 import toml
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
 from API.api_abstract import API
+from API.Google.google_common import GoogleCommon
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,16 +18,17 @@ logger = logging.getLogger(__name__)
 SCOPES = ['https://www.googleapis.com/auth/tasks.readonly']
 
 
-class GoogleTasks(API):
+class GoogleTasks(API, GoogleCommon):
     ''' Google Tasks class '''
 
     def __init__(self,
                  configpath: str):
 
         logger.info('Starting Google Tasks')
+
         # Define attributes
-        self.tasks_list_title = []
-        self.tasks_list = []
+        self.list = []
+        self.items = []
         self.tasks = []
 
         # Init credentials
@@ -38,42 +36,18 @@ class GoogleTasks(API):
         configfile = config['API']['Google']['Common']['path']
         self.get_credentials(configfile)
 
-    def get_credentials(self,
-                        configfile: str):
-        '''Get Google Calendar credentials. The file token.pickle stores
-         the user's access and refresh tokens, and is
-         created automatically when the authorization flow completes for the first
-         time. '''
-        logger.info('Reading configuration file from %s', configfile)
-        creds = None
-        token_path = os.path.join(configfile, 'token.pickle')
-        if os.path.exists(token_path):
-            with open(token_path, 'rb') as token:
-                creds = pickle.load(token)
-        # If there are no (valid) credentials available, let the user log in.
-        if not creds or not creds.valid:
-            credentials = os.path.join(configfile, 'client_secret.json')
-            flow = InstalledAppFlow.from_client_secrets_file(
-                credentials, SCOPES)
-            creds = flow.run_local_server(port=0)
-            # Save the credentials for the next run
-            with open(token_path, 'wb') as token:
-                pickle.dump(creds, token)
-
-        self.service = build('tasks', 'v1', credentials=creds)
-
-    def get_tasklist(self) -> str:
+    def get_list(self):
         ''' Read tasklist and save it into attribute '''
         results = self.service.tasklists().list(maxResults=10).execute()
-        items = results.get('items', [])
-        self.tasks_list = list(items)
+        self.items = results.get('items', [])
+        self.list = [x['title'] for x in self.items]
 
     def get_tasks(self,
                   target_tasklist='My Tasks'):
         '''  Read all tasks specific task list '''
 
-        self.get_tasklist()
-        for item in self.tasks_list:
+        self.get_list()
+        for item in self.items:
             if item['title'] == target_tasklist:
                 task_id = item['id']
                 tasks_ = self.service.tasks().list(tasklist=task_id).execute()
@@ -89,16 +63,13 @@ class GoogleTasks(API):
         ''' Process Google Tasks action'''
         if message == 'Check tasks':
             logger.debug('Detected API message %s', message)
-            self.check_tasks()
-            return self.tasks_list
-        elif message == 'Check task list':
-            logger.debug('Detected API message %s', message)
             self.get_tasks()
-            if  self.tasks:
-                # Convert list to string
-                return '\n'.join(self.tasks)
-            else:
-                return 'No tasks'
+            return ','.join(self.tasks)
+        elif message == 'Check list':
+            logger.debug('Detected API message %s', message)
+            self.get_list()
+            return '\n'.join(self.list)
+        logger.debug('Successfully processed Google Tasks action')
         return None
 
 
