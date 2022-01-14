@@ -14,7 +14,7 @@ class GoogleCommon:
 
     def get_credentials(self,
                         configfile: str,
-                        scopes=['https://www.googleapis.com/auth/tasks.readonly'],
+                        scopes=list,
                         service_name='tasks',
                         version='v1'):
         '''Get Google Calendar credentials. The file token.pickle stores

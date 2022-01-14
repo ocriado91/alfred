@@ -34,7 +34,8 @@ class GoogleTasks(API, GoogleCommon):
         # Init credentials
         config = toml.load(configpath)
         configfile = config['API']['Google']['Common']['path']
-        self.get_credentials(configfile)
+        self.get_credentials(configfile,
+                             scopes=['https://www.googleapis.com/auth/tasks.readonly'])
 
     def get_list(self):
         ''' Read tasklist and save it into attribute '''
