@@ -23,7 +23,7 @@ Actually, there's a Telegram bot to create a bot called _BotFather_:
 
 ![](https://core.telegram.org/file/811140763/1/PihKNbjT8UE/03b57814e13713da37)
 
-Follow these steps to create a `Telegram Bot` (from ![https://core.telegram.org/bots#6-botfather](https://core.telegram.org/bots#6-botfather)):
+Follow these steps to create a `Telegram Bot` (from [https://core.telegram.org/bots#6-botfather](https://core.telegram.org/bots#6-botfather)):
 
 
 1. Use the `/newbot` command to create a new bot. The BotFather will ask you for a __name__ and __username__, then generate an authentication __token__ for your new bot.
