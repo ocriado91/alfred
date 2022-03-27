@@ -7,7 +7,7 @@ import argparse
 import importlib
 import logging
 import sys
-import toml
+import tomli
 
 from TelegramBot.telegrambot import TelegramBot
 
@@ -44,14 +44,15 @@ class AlfredBot():
                 self.telegram_polling()
 
         except KeyboardInterrupt:
-            self.telegrambot.write_message('See you soon! :)')
+            self.telegrambot.send_message('See you soon! :)')
             logger.info('Catched KeyboardInterrupt. Bye :)')
             sys.exit()
 
     def read_config(self):
         ''' Read Alfred TOML configuration file '''
 
-        config = toml.load(self.configfile)
+        with open(self.configfile, 'rb') as f:
+            config = tomli.load(f)
         # Disable testing if Miscellaneus section
         # is not defined as key into configuration dictionary
         if 'Miscellaneous' not in config.keys():
@@ -127,7 +128,6 @@ class AlfredBot():
 
     def processing_incoming_message(self,
                                     message: str):
-
         ''' Check incoming message and compare against
             phrases defined by configuration'''
 
@@ -157,10 +157,10 @@ class AlfredBot():
             result = dynamic_class(self.configfile).process_action(message)
 
             # Send result to Telegram Bot
-            self.telegrambot.write_message(result)
+            self.telegrambot.send_message(result)
         else:
             logger.info('No API phrase found for %s', message)
-            self.telegrambot.write_message(f"I don't have any action for {message}.\
+            self.telegrambot.send_message(f"I don't have any action for {message}.\
                                              Please, try again")
 
 

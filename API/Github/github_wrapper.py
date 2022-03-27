@@ -5,7 +5,7 @@
 import logging
 import sys
 import github
-import toml
+import tomli
 from API.api_abstract import API
 
 logger = logging.getLogger(__name__)
@@ -43,7 +43,8 @@ def main():
     ''' Main function '''
 
     configpath = sys.argv[1]
-    config = toml.load(configpath)
+    with open(configpath, 'rb') as f:
+        config = tomli.load(f)
     config_github = config['API']['Github']
 
     # Init Github API

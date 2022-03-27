@@ -4,7 +4,7 @@
 import logging
 import sys
 
-import toml
+import tomli
 from API.api_abstract import API
 from API.Google.google_common import GoogleCommon
 
@@ -32,7 +32,8 @@ class GoogleTasks(API, GoogleCommon):
         self.tasks = []
 
         # Init credentials
-        config = toml.load(configpath)
+        with open(configpath, 'rb') as f:
+            config = tomli.load(f)
         configfile = config['API']['Google']['Common']['path']
         self.get_credentials(configfile,
                              scopes=['https://www.googleapis.com/auth/tasks.readonly'])
