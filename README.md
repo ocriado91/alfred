@@ -17,27 +17,20 @@ A picture is worth a thousand words:
 Reference: [https://xkcd.com/353/](https://xkcd.com/353/)
 
 ## Q&A
-### How to create Telegram Bot?
 
-Actually, there's a Telegram bot to create a bot called _BotFather_:
+### How to create a Telegram Bot?
 
-![](https://core.telegram.org/file/811140763/1/PihKNbjT8UE/03b57814e13713da37)
+Please refer to: https://developers.google.com/workspace/guides/create-project
 
-Follow these steps to create a `Telegram Bot` (from [https://core.telegram.org/bots#6-botfather](https://core.telegram.org/bots#6-botfather)):
+### How to create a Google Cloud project?
 
+Please refer to: https://developers.google.com/workspace/guides/enable-apis
 
-1. Use the `/newbot` command to create a new bot. The BotFather will ask you for a __name__ and __username__, then generate an authentication __token__ for your new bot.
+### How to enable Google Workspace APIs?
 
-    a) The __name__ of your bot is displayed in contact details and elsewhere.
+Please refer to: https://developers.google.com/workspace/guides/enable-apis
 
-    b) The __Username__ is a short name, to be used in mentions and t.me links. Usernames are 5-32 characters long and are case insensitive, but may only include Latin characters, numbers, and underscores. Your bot's username must end in 'bot', e.g. 'tetris_bot' or 'TetrisBot'.
+### How Google authentication and authorization works?
 
-    c) The __token__ is a string along the lines of `110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw` that is required to authorize the bot and send requests to the Bot API. Keep your token secure and store it safely, it can be used by anyone to control your bot.
-
-
-## References
-
-* Google Tasks API: https://developers.google.com/tasks/quickstart/python
-* Google Calendar API: https://developers.google.com/calendar/quickstart/python
-* PyGithub: https://github.com/PyGithub/PyGithub
+Please refer to: https://developers.google.com/workspace/guides/enable-apis
 
