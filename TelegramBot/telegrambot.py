@@ -45,7 +45,7 @@ class TelegramBot():
         message = data['result'][-1]['message']['text']
         return message
 
-    def write_message(self,
+    def send_message(self,
                       message: str):
         ''' Sent message from official TelegramBot API request '''
 
@@ -62,8 +62,8 @@ def main():
 
     # Echo received text
     telegrambot = TelegramBot(config)
-    text = telegrambot.read_message()
-    telegrambot.write_message(text)
+    mesage = telegrambot.read_message()
+    telegrambot.send_message(mesage)
 
 
 if __name__ == '__main__':
