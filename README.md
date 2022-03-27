@@ -16,9 +16,21 @@ A picture is worth a thousand words:
 
 Reference: [https://xkcd.com/353/](https://xkcd.com/353/)
 
-## References
+## Q&A
 
-* Google Tasks API: https://developers.google.com/tasks/quickstart/python
-* Google Calendar API: https://developers.google.com/calendar/quickstart/python
-* PyGithub: https://github.com/PyGithub/PyGithub
+### How to create a Telegram Bot?
+
+Please refer to: https://developers.google.com/workspace/guides/create-project
+
+### How to create a Google Cloud project?
+
+Please refer to: https://developers.google.com/workspace/guides/enable-apis
+
+### How to enable Google Workspace APIs?
+
+Please refer to: https://developers.google.com/workspace/guides/enable-apis
+
+### How Google authentication and authorization works?
+
+Please refer to: https://developers.google.com/workspace/guides/enable-apis
 
