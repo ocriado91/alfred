@@ -23,9 +23,16 @@ exclude_lines =
     self.telegrambot.write
     telegram_polling()
     get_api_function
-    args = argparse.ArgumentParser() 
+    args = argparse.ArgumentParser
+    def argument_parser
+    def main
+    if message in api_phrases:
+    logger.info
+    logger.debug
+    logger.warning
+    logger.error
     if not self.config['Miscellaneous']['TESTING']: 
-
+    
     # Don't complain if non-runnable code isn't run:
     if 0:
     if __name__ == .__main__.:
