@@ -51,8 +51,8 @@ class AlfredBot():
     def read_config(self):
         ''' Read Alfred TOML configuration file '''
 
-        with open(self.configfile, 'rb') as f:
-            config = tomli.load(f)
+        with open(self.configfile, 'rb') as config_file:
+            config = tomli.load(config_file)
         # Disable testing if Miscellaneus section
         # is not defined as key into configuration dictionary
         if 'Miscellaneous' not in config.keys():

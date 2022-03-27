@@ -32,8 +32,8 @@ class GoogleTasks(API, GoogleCommon):
         self.tasks = []
 
         # Init credentials
-        with open(configpath, 'rb') as f:
-            config = tomli.load(f)
+        with open(configpath, 'rb') as config_file:
+            config = tomli.load(config_file)
         configfile = config['API']['Google']['Common']['path']
         self.get_credentials(configfile,
                              scopes=['https://www.googleapis.com/auth/tasks.readonly'])

@@ -43,8 +43,8 @@ def main():
     ''' Main function '''
 
     configpath = sys.argv[1]
-    with open(configpath, 'rb') as f:
-        config = tomli.load(f)
+    with open(configpath, 'rb') as config_file:
+        config = tomli.load(config_file)
     config_github = config['API']['Github']
 
     # Init Github API
