@@ -1,0 +1,37 @@
+name: Unit Test
+
+on: [push]
+
+jobs:
+  unit-testing:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install poetry
+      run: |
+        pip install poetry
+    - name: Check lock file
+      run: poetry check --lock
+    - name: Install dependencies
+      run: poetry install --with test
+    - name: Run linter
+      run: |
+        poetry run ruff check
+        poetry run ruff format
+    - name: Run pytest
+      run: |
+        poetry run coverage run -m pytest -v
+        poetry run coverage xml
+    - name: Upload results to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
