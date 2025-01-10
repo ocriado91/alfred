@@ -14,3 +14,6 @@ __pycache__
 .coverage
 htmlcov
 coverage_html_report/
+
+# GitGuardian Cache
+.cache_ggshield

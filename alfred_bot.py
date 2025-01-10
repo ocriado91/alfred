@@ -8,6 +8,8 @@ import logging
 import sys
 import tomli
 
+from datetime import datetime, timezone
+
 from telegrambot import TelegramBot
 
 
@@ -22,6 +24,7 @@ LOG_FORMATTER = (
 logging.basicConfig(format=LOG_FORMATTER)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("PyGithub").setLevel(logging.WARNING)
+logging.getLogger("telegrambot").setLevel(logging.WARNING)
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -64,22 +67,11 @@ class AlfredBot:
 
     def telegram_polling(self):
         """Read new Telegram messages through polling mechanism."""
-        last_message_id = -1
+        reference_time = datetime.now(timezone.utc)
         while True:
-            message_id = self.telegrambot.extract_message_id()
-            # Discard first iteration until now incoming message
-            if last_message_id == -1:
-                last_message_id = message_id
-
-            # Check if new message is available
-            if message_id:
-                # Check if new message is different from last one
-                if message_id != last_message_id:
-                    message = self.telegrambot.read_message()
-                    self.processing_incoming_message(message)
-                    last_message_id = message_id
-            else:
-                break
+            if self.telegrambot.check_new_message(reference_time):
+                message = self.telegrambot.check_message_type()
+                self.processing_incoming_message(message)
 
     def get_api_keyphrase(self):
         """Get list of API keyphrases."""
