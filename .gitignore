@@ -17,3 +17,6 @@ coverage_html_report/
 
 # GitGuardian Cache
 .cache_ggshield
+
+# Environment file
+.env
